@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">宝库</string>
+    <string name="check_network">网络错误,请检查网络</string>
+    <string name="menu_index_text">首页</string>
+    <string name="menu_map_text">地图找库</string>
+    <string name="menu_news_text">宝库动态</string>
+    <string name="menu_box_text">我的保管箱</string>
+    <string name="menu_order_text">我的订单</string>
+    <string name="menu_account_text">我的账户</string>
+    <string name="nearby_project">附近宝库</string>
+    <string name="item_more">更多</string>
+    <string name="nearby_most">里你最近</string>
+    <string name="project_detail">查看详情</string>
+    <string name="project_road">路线导航</string>
+</resources>
