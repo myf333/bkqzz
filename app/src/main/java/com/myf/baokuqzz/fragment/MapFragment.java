@@ -10,8 +10,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.baidu.location.BDLocation;
 import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.BitmapDescriptor;
+import com.baidu.mapapi.map.BitmapDescriptorFactory;
+import com.baidu.mapapi.map.MapStatus;
+import com.baidu.mapapi.map.MapStatusUpdate;
+import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.MyLocationConfiguration;
+import com.baidu.mapapi.map.MyLocationData;
+import com.baidu.mapapi.model.LatLng;
 import com.myf.baokuqzz.R;
 import com.myf.baokuqzz.activity.MainActivity;
 import com.myf.baokuqzz.adapter.MapListAdapter;
@@ -36,6 +45,10 @@ public class MapFragment extends BaseFragment<MapPresenter> implements SwipeRefr
     private BaiduMap baiduMap;
     private MapListAdapter mapListAdapter;
     private SwipeRefreshLayout swipe_refresh_map_list;
+    private BDLocation location;
+
+    BitmapDescriptor bdCurrent = BitmapDescriptorFactory.fromResource(R.drawable.icon_maker1);
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -98,6 +111,29 @@ public class MapFragment extends BaseFragment<MapPresenter> implements SwipeRefr
 
     public void loadDate(){
         presenter.getCanSeeProject("上海");
+        MyLocationData locData = new MyLocationData.Builder()
+                //.accuracy(location.getRadius())
+                // 此处设置开发者获取到的方向信息，顺时针0-360
+                .direction(0).latitude(location.getLatitude())
+                .longitude(location.getLongitude()).build();
+        baiduMap.setMyLocationData(locData);
+        baiduMap.setMyLocationConfiguration(
+                new MyLocationConfiguration(MyLocationConfiguration.LocationMode.NORMAL,true,bdCurrent));
+        //设定中心点坐标
+        LatLng center =  new LatLng(location.getLatitude(),location.getLongitude());
+        //定义地图状态
+        MapStatus mMapStatus = new MapStatus.Builder()
+                //要移动的点
+                .target(center)
+                //放大地图到20倍
+                .zoom(12.0f)
+                .build();
+        //定义MapStatusUpdate对象，以便描述地图状态将要发生的变化
+        MapStatusUpdate mMapStatusUpdate = MapStatusUpdateFactory.newMapStatus(mMapStatus);
+        //改变地图状态
+        baiduMap.setMapStatus(mMapStatusUpdate);
+
+
     }
 
     public void updateList(ReturnRet<List<ProjectView>> model){
@@ -113,5 +149,9 @@ public class MapFragment extends BaseFragment<MapPresenter> implements SwipeRefr
         mapListAdapter.setProjects(model.getData());
         mapListAdapter.notifyDataSetChanged();
         swipe_refresh_map_list.setRefreshing(false);
+    }
+
+    public void setLocation(BDLocation location) {
+        this.location = location;
     }
 }

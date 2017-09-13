@@ -62,6 +62,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
                 return;
             }
             bkCommunityFragment.setLocation(bdLocation);
+            mapFragment.setLocation(bdLocation);
             locationClient.stop();
         }
     };
