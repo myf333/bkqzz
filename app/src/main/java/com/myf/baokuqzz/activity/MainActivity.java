@@ -25,6 +25,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.myf.baokuqzz.R;
 import com.myf.baokuqzz.fragment.BKCommunityFragment;
 import com.myf.baokuqzz.fragment.MapFragment;
+import com.myf.baokuqzz.fragment.NewsFragment;
 import com.myf.baokuqzz.global.BKApplication;
 import com.myf.baokuqzz.presenter.MainPresenter;
 
@@ -36,6 +37,7 @@ import com.nineoldandroids.view.ViewHelper;
 public class MainActivity extends BaseActivity<MainPresenter> implements View.OnClickListener{
     private BKCommunityFragment bkCommunityFragment;
     private MapFragment mapFragment;
+    private NewsFragment newsFragment;
 
     @Bind(R.id.img_themeBack)
     ImageView mBack;
@@ -82,17 +84,22 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
         if(savedInstanceState == null){
             bkCommunityFragment = new BKCommunityFragment();
             mapFragment = new MapFragment();
+            newsFragment = new NewsFragment();
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.add(R.id.relative,bkCommunityFragment,"home");
             ft.add(R.id.relative,mapFragment,"map");
+            ft.add(R.id.relative,newsFragment,"news");
             ft.hide(mapFragment);
+            ft.hide(newsFragment);
             ft.show(bkCommunityFragment);
             ft.commit();
         }else{
             bkCommunityFragment = (BKCommunityFragment)getSupportFragmentManager().findFragmentByTag("home");
             mapFragment = (MapFragment)getSupportFragmentManager().findFragmentByTag("map");
+            newsFragment = (NewsFragment)getSupportFragmentManager().findFragmentByTag("news");
             getSupportFragmentManager().beginTransaction()
                     .hide(mapFragment)
+                    .hide(newsFragment)
                     .show(bkCommunityFragment).commit();
         }
         drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
@@ -133,7 +140,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
         return presenter;
     }
 
-    @OnClick({R.id.img_themeBack,R.id.img_right,R.id.menu_index,R.id.menu_map})
+    @OnClick({R.id.img_themeBack,R.id.img_right,R.id.menu_index,R.id.menu_map,R.id.menu_news})
     @Override
     public void onClick(View view) {
         drawerLayout.closeDrawers();
@@ -156,6 +163,14 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
                 ft.commit();
                 mapFragment.loadDate();
                 title.setText(R.string.menu_map_text);
+                break;
+            case R.id.item_news_more:
+            case R.id.menu_news:
+                ft.hide(bkCommunityFragment);
+                ft.hide(mapFragment);
+                ft.show(newsFragment);
+                ft.commit();
+                title.setText(R.string.menu_news_text);
                 break;
         }
     }

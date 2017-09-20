@@ -110,11 +110,17 @@ public class BKCommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
-    static class NewsTitleHolder extends RecyclerView.ViewHolder{
+    class NewsTitleHolder extends RecyclerView.ViewHolder{
         LinearLayout item_news_more;
         public NewsTitleHolder(View itemView) {
             super(itemView);
             item_news_more = (LinearLayout)itemView.findViewById(R.id.item_news_more);
+            item_news_more.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    activity.onClick(item_news_more);
+                }
+            });
         }
     }
 

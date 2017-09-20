@@ -36,8 +36,9 @@
         <!-- 集成百度地图 -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="jbIbW2cv5271kgLrdmTrUz7CL3B6DeFj"/>
-            <!--android:value="d3oVZFCBAqaGbpgj7PplNcY87CLIs2lT" />-->
+            android:value="d3oVZFCBAqaGbpgj7PplNcY87CLIs2lT" />
+            <!--android:value="jbIbW2cv5271kgLrdmTrUz7CL3B6DeFj"/>-->
+
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"

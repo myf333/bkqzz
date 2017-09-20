@@ -28,11 +28,14 @@ public class NewsFragmentPresenter extends BasePresenter<MainActivity,NewsDao> {
         addSubscription(getDao().getNewsList(currPage, 5), new ApiCallback<PageRet<List<NewsView>>>() {
             @Override
             public void onSuccess(PageRet<List<NewsView>> model) {
-
+                if(model.isSuccess()){
+                    fragment.getNewsList(model.getData(),model.getCurrpage(),model.getTotal());
+                }
             }
 
             @Override
             public void onFailure(String msg) {
+                fragment.updateFail();
                 Toast.makeText(BKApplication.getInstance(),msg,Toast.LENGTH_SHORT).show();
             }
 
