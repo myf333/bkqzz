@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.baidu.location.BDLocation;
 import com.myf.baokuqzz.R;
+import com.myf.baokuqzz.activity.BaseActivity;
 import com.myf.baokuqzz.activity.MainActivity;
 import com.myf.baokuqzz.adapter.BKCommunityAdapter;
 import com.myf.baokuqzz.global.Config;
@@ -26,7 +27,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class BKCommunityFragment extends BaseFragment<BKCommunityPresenter> implements SwipeRefreshLayout.OnRefreshListener {
-    private MainActivity mainActivity;
+    private BaseActivity activity;
     private BKCommunityAdapter bkCommunityAdapter;
     private double Longitude;
     private double Latitude;
@@ -40,7 +41,7 @@ public class BKCommunityFragment extends BaseFragment<BKCommunityPresenter> impl
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_bkcommunity,container,false);
         ButterKnife.bind(this,view);
-        mainActivity = (MainActivity)getActivity();
+        activity = (BaseActivity) getActivity();
         return view;
     }
 
@@ -54,7 +55,7 @@ public class BKCommunityFragment extends BaseFragment<BKCommunityPresenter> impl
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
-        bkCommunityAdapter = new BKCommunityAdapter(mainActivity);
+        bkCommunityAdapter = new BKCommunityAdapter(activity);
         recyclerView.setAdapter(bkCommunityAdapter);
 
         presenter.loadNews(10);

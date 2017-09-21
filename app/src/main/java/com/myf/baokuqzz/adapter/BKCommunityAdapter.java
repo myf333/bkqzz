@@ -1,5 +1,6 @@
 package com.myf.baokuqzz.adapter;
 
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +11,8 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.myf.baokuqzz.R;
-import com.myf.baokuqzz.activity.MainActivity;
+import com.myf.baokuqzz.activity.BaseActivity;
+import com.myf.baokuqzz.activity.NewsDetailActivity;
 import com.myf.baokuqzz.model.NewsView;
 import com.myf.baokuqzz.model.ProjectView;
 
@@ -29,9 +31,9 @@ public class BKCommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private static final int DEFAULT_ITEM_SIZE = 2;
     private List<NewsView> newsViews = new ArrayList<>();
     private ProjectView projectView;
-    private MainActivity activity;
+    private BaseActivity activity;
 
-    public BKCommunityAdapter(MainActivity activity) {
+    public BKCommunityAdapter(BaseActivity activity) {
         this.activity = activity;
     }
 
@@ -82,7 +84,7 @@ public class BKCommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 }
                 break;
             case TYPE_NEWS_TITLE:
-                NewsTitleHolder newsTitleHolder = (NewsTitleHolder)holder;
+                //NewsTitleHolder newsTitleHolder = (NewsTitleHolder)holder;
                 //newsTitleHolder.item_news_more.setOnClickListener();
                 break;
             case TYPE_NEWS:
@@ -114,17 +116,12 @@ public class BKCommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         LinearLayout item_news_more;
         public NewsTitleHolder(View itemView) {
             super(itemView);
-            item_news_more = (LinearLayout)itemView.findViewById(R.id.item_news_more);
-            item_news_more.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    activity.onClick(item_news_more);
-                }
-            });
+            item_news_more = itemView.findViewById(R.id.item_news_more);
+            item_news_more.setOnClickListener(activity);
         }
     }
 
-    static class NewsHolder extends RecyclerView.ViewHolder{
+    class NewsHolder extends RecyclerView.ViewHolder{
         SimpleDraweeView item_news_pic;
         TextView txt_news_title;
         TextView txt_news_content;
@@ -138,10 +135,18 @@ public class BKCommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             txt_news_content = itemView.findViewById(R.id.txt_news_content);
             txt_news_time = itemView.findViewById(R.id.txt_news_time);
             item_news = itemView.findViewById(R.id.item_news);
+            item_news.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(activity, NewsDetailActivity.class);
+                    intent.putExtra("id",id);
+                    activity.startActivity(intent);
+                }
+            });
         }
     }
 
-    static class NearbyHolder extends RecyclerView.ViewHolder{
+    class NearbyHolder extends RecyclerView.ViewHolder{
         LinearLayout item_project_more;
         RelativeLayout item_project_detail;
         TextView txt_project_name;

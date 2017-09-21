@@ -153,12 +153,14 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
                 break;
             case R.id.menu_index:
                 ft.hide(mapFragment);
+                ft.hide(newsFragment);
                 ft.show(bkCommunityFragment);
                 ft.commit();
                 title.setText(R.string.app_name);
                 break;
             case R.id.menu_map:
                 ft.hide(bkCommunityFragment);
+                ft.hide(newsFragment);
                 ft.show(mapFragment);
                 ft.commit();
                 mapFragment.loadDate();

@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.myf.baokuqzz.R;
+import com.myf.baokuqzz.activity.BaseActivity;
 import com.myf.baokuqzz.activity.MainActivity;
 import com.myf.baokuqzz.adapter.NewsListAdapter;
 import com.myf.baokuqzz.model.NewsView;
@@ -50,7 +51,7 @@ public class NewsFragment extends BaseFragment<NewsFragmentPresenter> implements
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
-        adapter = new NewsListAdapter();
+        adapter = new NewsListAdapter((BaseActivity) getActivity());
         recyclerView.setAdapter(adapter);
         presenter.getNewsList(1);
     }
