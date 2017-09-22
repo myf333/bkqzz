@@ -6,6 +6,7 @@
 
     <color name="color_red">#f70320</color>
     <color name="color_menu_back">#1e1e1e</color>
+    <color name="color_gray_one">#333333</color>
     <color name="color_gray_three">#a0a0a0</color>
     <color name="color_gray_four">#d3d3d3</color>
     <color name="color_gray_five">#ebebeb</color>

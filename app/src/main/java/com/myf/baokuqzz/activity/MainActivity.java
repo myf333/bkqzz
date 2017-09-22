@@ -158,6 +158,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
                 ft.commit();
                 title.setText(R.string.app_name);
                 break;
+            case R.id.item_project_more:
             case R.id.menu_map:
                 ft.hide(bkCommunityFragment);
                 ft.hide(newsFragment);

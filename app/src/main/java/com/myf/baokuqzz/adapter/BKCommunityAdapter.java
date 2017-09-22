@@ -81,6 +81,7 @@ public class BKCommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     String distance = df.format(projectView.getDistance())+"KM";
                     nearbyHolder.txt_project_distance.setText(distance);
                     nearbyHolder.txt_project_address.setText(projectView.getAddress());
+                    nearbyHolder.item_project_more.setOnClickListener(activity);
                 }
                 break;
             case TYPE_NEWS_TITLE:
