@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.myf.baokuqzz.R;
 import com.myf.baokuqzz.activity.ProjectActivity;
+import com.myf.baokuqzz.activity.RoutePlanActivity;
 import com.myf.baokuqzz.model.ProjectView;
 
 import java.text.DecimalFormat;
@@ -59,6 +60,8 @@ public class MapListAdapter extends RecyclerView.Adapter {
             myHolder.item_map_list_title.setVisibility(View.GONE);
         }
         myHolder.id = project.getId();
+        myHolder.X = project.getX();
+        myHolder.Y = project.getY();
     }
 
     @Override
@@ -78,6 +81,8 @@ public class MapListAdapter extends RecyclerView.Adapter {
         LinearLayout btn_map_list_detail;
         LinearLayout btn_map_list_road;
         int id;
+        double X;
+        double Y;
         MapListViewHolder(View itemView) {
             super(itemView);
             item_map_list_title = itemView.findViewById(R.id.item_map_list_title);
@@ -94,6 +99,15 @@ public class MapListAdapter extends RecyclerView.Adapter {
                 public void onClick(View view) {
                     Intent intent = new Intent(activity, ProjectActivity.class);
                     intent.putExtra("id",id);
+                    activity.startActivity(intent);
+                }
+            });
+            btn_map_list_road.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(activity, RoutePlanActivity.class);
+                    intent.putExtra("X",X);
+                    intent.putExtra("Y",Y);
                     activity.startActivity(intent);
                 }
             });

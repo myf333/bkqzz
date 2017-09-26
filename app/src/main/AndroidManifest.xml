@@ -52,7 +52,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.NewsDetailActivity" />
-        <activity android:name=".activity.ProjectActivity"></activity>
+        <activity android:name=".activity.ProjectActivity" />
+        <activity android:name=".activity.RoutePlanActivity"></activity>
     </application>
 
 </manifest>

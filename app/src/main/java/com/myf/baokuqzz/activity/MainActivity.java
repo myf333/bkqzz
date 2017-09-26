@@ -3,6 +3,7 @@ package com.myf.baokuqzz.activity;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -13,6 +14,8 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,6 +54,12 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
     FrameLayout frameLayout;
     @Bind(R.id.menu_header)
     SimpleDraweeView headerPic;
+    @Bind(R.id.title_radio_group)
+    RadioGroup title_radio_group;
+    @Bind(R.id.btn_radio_list)
+    RadioButton btn_radio_list;
+    @Bind(R.id.btn_radio_map)
+    RadioButton btn_radio_map;
 
     RelativeLayout relative_title;
     public LocationClient locationClient=null;
@@ -123,6 +132,28 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
 
             }
         });
+        title_radio_group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, @IdRes int i) {
+                switch (i){
+                    case R.id.btn_radio_list:
+                        btn_radio_list.setBackgroundResource(R.drawable.radio_bg_leftwhite);
+                        btn_radio_list.setTextColor(getResources().getColor(R.color.color_red));
+                        btn_radio_map.setBackgroundResource(R.drawable.radio_bg_rightred);
+                        btn_radio_map.setTextColor(getResources().getColor(R.color.white));
+                        mapFragment.onRadioChecked(0);
+                        break;
+                    case R.id.btn_radio_map:
+                        btn_radio_map.setBackgroundResource(R.drawable.radio_bg_rightwhite);
+                        btn_radio_map.setTextColor(getResources().getColor(R.color.color_red));
+                        btn_radio_list.setBackgroundResource(R.drawable.radio_bg_leftred);
+                        btn_radio_list.setTextColor(getResources().getColor(R.color.white));
+                        mapFragment.onRadioChecked(1);
+                        break;
+                }
+            }
+        });
+
         //百度地图定位设置
         locationClient = new LocationClient(getApplicationContext());
         locationClient.registerLocationListener(locationListener);
@@ -157,6 +188,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
                 ft.show(bkCommunityFragment);
                 ft.commit();
                 title.setText(R.string.app_name);
+                title_radio_group.setVisibility(View.GONE);
                 break;
             case R.id.item_project_more:
             case R.id.menu_map:
@@ -166,6 +198,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
                 ft.commit();
                 mapFragment.loadDate();
                 title.setText(R.string.menu_map_text);
+                title_radio_group.setVisibility(View.VISIBLE);
                 break;
             case R.id.item_news_more:
             case R.id.menu_news:
@@ -174,6 +207,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
                 ft.show(newsFragment);
                 ft.commit();
                 title.setText(R.string.menu_news_text);
+                title_radio_group.setVisibility(View.GONE);
                 break;
         }
     }
