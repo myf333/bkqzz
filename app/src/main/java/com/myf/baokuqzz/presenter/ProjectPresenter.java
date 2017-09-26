@@ -18,6 +18,7 @@ public class ProjectPresenter extends BasePresenter<ProjectActivity,ProjectDao> 
 
     public ProjectPresenter(ProjectActivity activity) {
         this.activity = activity;
+        attachView(activity,ProjectDao.class);
     }
 
     public void getProjectDetail(int id){

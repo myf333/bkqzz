@@ -13,6 +13,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.myf.baokuqzz.R;
 import com.myf.baokuqzz.activity.BaseActivity;
 import com.myf.baokuqzz.activity.NewsDetailActivity;
+import com.myf.baokuqzz.activity.ProjectActivity;
 import com.myf.baokuqzz.model.NewsView;
 import com.myf.baokuqzz.model.ProjectView;
 
@@ -82,6 +83,7 @@ public class BKCommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     nearbyHolder.txt_project_distance.setText(distance);
                     nearbyHolder.txt_project_address.setText(projectView.getAddress());
                     nearbyHolder.item_project_more.setOnClickListener(activity);
+                    nearbyHolder.id = projectView.getId();
                 }
                 break;
             case TYPE_NEWS_TITLE:
@@ -153,6 +155,7 @@ public class BKCommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         TextView txt_project_name;
         TextView txt_project_distance;
         TextView txt_project_address;
+        int id;
         public NearbyHolder(View itemView) {
             super(itemView);
             item_project_more = itemView.findViewById(R.id.item_project_more);
@@ -160,6 +163,14 @@ public class BKCommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             txt_project_name = itemView.findViewById(R.id.txt_project_name);
             txt_project_distance = itemView.findViewById(R.id.txt_project_distance);
             txt_project_address = itemView.findViewById(R.id.txt_project_address);
+            item_project_detail.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(activity, ProjectActivity.class);
+                    intent.putExtra("id",id);
+                    activity.startActivity(intent);
+                }
+            });
         }
     }
 

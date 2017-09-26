@@ -13,4 +13,6 @@
     <string name="project_detail">查看详情</string>
     <string name="project_road">路线导航</string>
     <string name="rent_box">我要租箱</string>
+    <string name="desc">简介</string>
+    <string name="project_pic">现场图片</string>
 </resources>
