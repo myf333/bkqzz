@@ -8,6 +8,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baidu.location.BDAbstractLocationListener;
@@ -22,6 +24,7 @@ import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.search.core.SearchResult;
 import com.baidu.mapapi.search.route.BikingRouteResult;
+import com.baidu.mapapi.search.route.DrivingRoutePlanOption;
 import com.baidu.mapapi.search.route.DrivingRouteResult;
 import com.baidu.mapapi.search.route.IndoorRouteResult;
 import com.baidu.mapapi.search.route.MassTransitRoutePlanOption;
@@ -30,11 +33,16 @@ import com.baidu.mapapi.search.route.OnGetRoutePlanResultListener;
 import com.baidu.mapapi.search.route.PlanNode;
 import com.baidu.mapapi.search.route.RoutePlanSearch;
 import com.baidu.mapapi.search.route.TransitRouteResult;
+import com.baidu.mapapi.search.route.WalkingRoutePlanOption;
 import com.baidu.mapapi.search.route.WalkingRouteResult;
 import com.myf.baokuqzz.R;
 import com.myf.baokuqzz.global.BKApplication;
+import com.myf.baokuqzz.map.DrivingRouteOverlay;
 import com.myf.baokuqzz.map.MassTransitRouteOverlay;
+import com.myf.baokuqzz.map.OverlayManager;
+import com.myf.baokuqzz.map.WalkingRouteOverlay;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -47,7 +55,16 @@ public class RoutePlanActivity extends AppCompatActivity implements OnGetRoutePl
     private RoutePlanSearch mapSearch;
     private PlanNode startNode;
     private PlanNode endNode;
+    private String projectType;
     BitmapDescriptor bdCurrent = BitmapDescriptorFactory.fromResource(R.drawable.icon_location);
+    @Bind(R.id.route_bus)
+    LinearLayout route_bus;
+    @Bind(R.id.route_car)
+    LinearLayout route_car;
+    @Bind(R.id.route_walk)
+    LinearLayout route_walk;
+    @Bind(R.id.tv_themeTitle)
+    TextView title;
 
     BDAbstractLocationListener locationListener = new BDAbstractLocationListener() {
         @Override
@@ -58,8 +75,6 @@ public class RoutePlanActivity extends AppCompatActivity implements OnGetRoutePl
             }
             currLocation = new LatLng(bdLocation.getLatitude(),bdLocation.getLongitude());
             locationClient.stop();
-            MarkerOptions ooA = new MarkerOptions().position(currLocation).icon(bdCurrent)
-                    .zIndex(9).draggable(false);
             mapSearch = RoutePlanSearch.newInstance();
             mapSearch.setOnGetRoutePlanResultListener(RoutePlanActivity.this);
             startNode = PlanNode.withLocation(currLocation);
@@ -74,7 +89,9 @@ public class RoutePlanActivity extends AppCompatActivity implements OnGetRoutePl
         ButterKnife.bind(this);
         double X = getIntent().getDoubleExtra("X",0);
         double Y = getIntent().getDoubleExtra("Y",0);
-        projectLocation = new LatLng(X,Y);
+        projectType = getIntent().getStringExtra("type");
+        projectLocation = new LatLng(Y,X);
+        title.setText(R.string.project_road);
 
         locationClient = new LocationClient(getApplicationContext());
         locationClient.registerLocationListener(locationListener);
@@ -125,19 +142,72 @@ public class RoutePlanActivity extends AppCompatActivity implements OnGetRoutePl
         mapView.onDestroy();
     }
 
-    @OnClick({R.id.img_themeBack})
+    @OnClick({R.id.img_themeBack,R.id.route_bus,R.id.route_car,R.id.route_walk})
     @Override
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.img_themeBack:
                 finish();
                 break;
+            case R.id.route_bus:
+                if(currLocation == null){
+                    Toast.makeText(getApplicationContext(),"无法获取当前位置",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                route_bus.setBackgroundResource(R.drawable.shape_leftradius_red);
+                route_car.setBackgroundResource(R.color.color_gray1);
+                route_walk.setBackgroundResource(R.drawable.shape_rightradius_gray);
+                mapSearch.masstransitSearch(new MassTransitRoutePlanOption().from(startNode).to(endNode));
+                break;
+            case R.id.route_car:
+                if(currLocation == null){
+                    Toast.makeText(getApplicationContext(),"无法获取当前位置",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                route_bus.setBackgroundResource(R.drawable.shape_leftradius_gray);
+                route_car.setBackgroundResource(R.color.color_red);
+                route_walk.setBackgroundResource(R.drawable.shape_rightradius_gray);
+                mapSearch.drivingSearch(new DrivingRoutePlanOption().from(startNode).to(endNode));
+                break;
+            case R.id.route_walk:
+                if(currLocation == null){
+                    Toast.makeText(getApplicationContext(),"无法获取当前位置",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                route_bus.setBackgroundResource(R.drawable.shape_leftradius_gray);
+                route_car.setBackgroundResource(R.color.color_gray1);
+                route_walk.setBackgroundResource(R.drawable.shape_rightradius_red);
+                mapSearch.walkingSearch(new WalkingRoutePlanOption().from(startNode).to(endNode));
+                break;
         }
     }
 
     @Override
     public void onGetWalkingRouteResult(WalkingRouteResult result) {
+        if(result!=null && result.error == SearchResult.ERRORNO.NO_ERROR && result.getRouteLines().size() > 0){
+            baiduMap.clear();
+            WalkingRouteOverlay overlay = new WalkingRouteOverlay(baiduMap){
+                @Override
+                public BitmapDescriptor getStartMarker() {
+                    return BitmapDescriptorFactory.fromResource(R.drawable.icon_location);
+                }
 
+                @Override
+                public BitmapDescriptor getTerminalMarker() {
+                    if(projectType.equals("社区宝库")){
+                        return BitmapDescriptorFactory.fromResource(R.drawable.icon_maker1);
+                    }else {
+                        return BitmapDescriptorFactory.fromResource(R.drawable.icon_maker2);
+                    }
+                }
+            };
+            baiduMap.setOnMarkerClickListener(overlay);
+            overlay.setData(result.getRouteLines().get(0));
+            overlay.addToMap();
+            overlay.zoomToSpan();
+        }else {
+            Toast.makeText(BKApplication.getInstance(),"未找到结果",Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -148,7 +218,22 @@ public class RoutePlanActivity extends AppCompatActivity implements OnGetRoutePl
     @Override
     public void onGetMassTransitRouteResult(MassTransitRouteResult result) {
         if(result!=null && result.error == SearchResult.ERRORNO.NO_ERROR && result.getRouteLines().size() > 0){
-            MassTransitRouteOverlay overlay = new MassTransitRouteOverlay(baiduMap);
+            baiduMap.clear();
+            MassTransitRouteOverlay overlay = new MassTransitRouteOverlay(baiduMap){
+                @Override
+                public BitmapDescriptor getStartMarker() {
+                    return BitmapDescriptorFactory.fromResource(R.drawable.icon_location);
+                }
+
+                @Override
+                public BitmapDescriptor getTerminalMarker() {
+                    if(projectType.equals("社区宝库")){
+                        return BitmapDescriptorFactory.fromResource(R.drawable.icon_maker1);
+                    }else {
+                        return BitmapDescriptorFactory.fromResource(R.drawable.icon_maker2);
+                    }
+                }
+            };
             baiduMap.setOnMarkerClickListener(overlay);
             overlay.setData(result.getRouteLines().get(0));
             overlay.addToMap();
@@ -160,7 +245,30 @@ public class RoutePlanActivity extends AppCompatActivity implements OnGetRoutePl
 
     @Override
     public void onGetDrivingRouteResult(DrivingRouteResult result) {
+        if(result!=null && result.error == SearchResult.ERRORNO.NO_ERROR && result.getRouteLines().size() > 0){
+            baiduMap.clear();
+            DrivingRouteOverlay overlay = new DrivingRouteOverlay(baiduMap){
+                @Override
+                public BitmapDescriptor getStartMarker() {
+                    return BitmapDescriptorFactory.fromResource(R.drawable.icon_location);
+                }
 
+                @Override
+                public BitmapDescriptor getTerminalMarker() {
+                    if(projectType.equals("社区宝库")){
+                        return BitmapDescriptorFactory.fromResource(R.drawable.icon_maker1);
+                    }else {
+                        return BitmapDescriptorFactory.fromResource(R.drawable.icon_maker2);
+                    }
+                }
+            };
+            baiduMap.setOnMarkerClickListener(overlay);
+            overlay.setData(result.getRouteLines().get(0));
+            overlay.addToMap();
+            overlay.zoomToSpan();
+        }else {
+            Toast.makeText(BKApplication.getInstance(),"未找到结果",Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

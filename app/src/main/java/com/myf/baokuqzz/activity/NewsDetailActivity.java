@@ -1,10 +1,14 @@
 package com.myf.baokuqzz.activity;
 
 import android.graphics.Bitmap;
+import android.net.http.SslError;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.SslErrorHandler;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -43,19 +47,19 @@ public class NewsDetailActivity extends AppCompatActivity implements View.OnClic
             }
             String newsUrl = Config.NewsDetailUrl + "/" + id;
             webView.loadUrl(newsUrl);
-        }
-        webView.setWebViewClient(new WebViewClient(){
-            @Override
-            public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                super.onPageStarted(view, url, favicon);
-            }
+            webView.setWebViewClient(new WebViewClient(){
+                @Override
+                public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                    super.onPageStarted(view, url, favicon);
+                }
 
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
-                title.setText(view.getTitle());
-            }
-        });
+                @Override
+                public void onPageFinished(WebView view, String url) {
+                    super.onPageFinished(view, url);
+                    title.setText(view.getTitle());
+                }
+            });
+        }
     }
 
     @OnClick(R.id.img_themeBack)

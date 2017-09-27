@@ -62,6 +62,7 @@ public class MapListAdapter extends RecyclerView.Adapter {
         myHolder.id = project.getId();
         myHolder.X = project.getX();
         myHolder.Y = project.getY();
+        myHolder.type = project.getProjecttype();
     }
 
     @Override
@@ -83,6 +84,7 @@ public class MapListAdapter extends RecyclerView.Adapter {
         int id;
         double X;
         double Y;
+        String type;
         MapListViewHolder(View itemView) {
             super(itemView);
             item_map_list_title = itemView.findViewById(R.id.item_map_list_title);
@@ -108,6 +110,7 @@ public class MapListAdapter extends RecyclerView.Adapter {
                     Intent intent = new Intent(activity, RoutePlanActivity.class);
                     intent.putExtra("X",X);
                     intent.putExtra("Y",Y);
+                    intent.putExtra("type",type);
                     activity.startActivity(intent);
                 }
             });
