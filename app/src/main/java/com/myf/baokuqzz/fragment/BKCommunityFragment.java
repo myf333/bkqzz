@@ -62,6 +62,8 @@ public class BKCommunityFragment extends BaseFragment<BKCommunityPresenter> impl
         presenter.getNearBy(Config.Longitude, Config.Latitude);
     }
 
+
+
     public void updateNews(ReturnRet<List<NewsView>> model){
         bkCommunityAdapter.getNewsViews().clear();
         bkCommunityAdapter.getNewsViews().addAll(model.getData());

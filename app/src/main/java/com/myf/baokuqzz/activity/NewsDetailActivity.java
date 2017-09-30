@@ -42,24 +42,31 @@ public class NewsDetailActivity extends AppCompatActivity implements View.OnClic
             settings.setJavaScriptEnabled(true);
             settings.setDefaultTextEncodingName("utf-8");
             settings.setBlockNetworkImage(false);//解决图片不显示
+            settings.setDomStorageEnabled(true);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
             }
             String newsUrl = Config.NewsDetailUrl + "/" + id;
             webView.loadUrl(newsUrl);
-            webView.setWebViewClient(new WebViewClient(){
-                @Override
-                public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                    super.onPageStarted(view, url, favicon);
-                }
-
-                @Override
-                public void onPageFinished(WebView view, String url) {
-                    super.onPageFinished(view, url);
-                    title.setText(view.getTitle());
-                }
-            });
         }
+        webView.setWebViewClient(new WebViewClient(){
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                super.onPageStarted(view, url, favicon);
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                title.setText(view.getTitle());
+            }
+        });
+        webView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                return true;
+            }
+        });
     }
 
     @OnClick(R.id.img_themeBack)
