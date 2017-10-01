@@ -131,8 +131,8 @@ public class MapFragment extends BaseFragment<MapPresenter> implements SwipeRefr
         //定义MapStatusUpdate对象，以便描述地图状态将要发生的变化
         MapStatusUpdate mMapStatusUpdate = MapStatusUpdateFactory.newMapStatus(mMapStatus);
         //改变地图状态
-        baiduMap.setMapStatus(mMapStatusUpdate);
-
+        //baiduMap.setMapStatus(mMapStatusUpdate);
+        baiduMap.animateMapStatus(mMapStatusUpdate);
 
     }
 
