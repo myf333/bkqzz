@@ -5,7 +5,12 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="color_red">#f70320</color>
+    <color name="color_red_dark">#c00218</color>
+    <color name="color_red_navy">#e01919</color>
+
     <color name="color_menu_back">#1e1e1e</color>
+    <color name="color_gray_one">#333333</color>
+    <color name="color_gray_two">#787878</color>
     <color name="color_gray_three">#a0a0a0</color>
     <color name="color_gray_four">#d3d3d3</color>
     <color name="color_gray_five">#ebebeb</color>

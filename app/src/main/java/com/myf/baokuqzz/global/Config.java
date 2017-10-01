@@ -6,6 +6,7 @@ package com.myf.baokuqzz.global;
 
 public class Config {
     public static final String ApiUrl = "https://bkapi.baokutreasury.com/api/";
+    public static final String NewsDetailUrl = "https://bkapi.baokutreasury.com/About/newsdetail";
     public static final double Longitude = 121.500833;
     public static final double Latitude = 31.235806;
 }

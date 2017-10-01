@@ -3,6 +3,7 @@ package com.myf.baokuqzz.activity;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -13,6 +14,8 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,6 +28,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.myf.baokuqzz.R;
 import com.myf.baokuqzz.fragment.BKCommunityFragment;
 import com.myf.baokuqzz.fragment.MapFragment;
+import com.myf.baokuqzz.fragment.NewsFragment;
 import com.myf.baokuqzz.global.BKApplication;
 import com.myf.baokuqzz.presenter.MainPresenter;
 
@@ -36,6 +40,7 @@ import com.nineoldandroids.view.ViewHelper;
 public class MainActivity extends BaseActivity<MainPresenter> implements View.OnClickListener{
     private BKCommunityFragment bkCommunityFragment;
     private MapFragment mapFragment;
+    private NewsFragment newsFragment;
 
     @Bind(R.id.img_themeBack)
     ImageView mBack;
@@ -49,6 +54,12 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
     FrameLayout frameLayout;
     @Bind(R.id.menu_header)
     SimpleDraweeView headerPic;
+    @Bind(R.id.title_radio_group)
+    RadioGroup title_radio_group;
+    @Bind(R.id.btn_radio_list)
+    RadioButton btn_radio_list;
+    @Bind(R.id.btn_radio_map)
+    RadioButton btn_radio_map;
 
     RelativeLayout relative_title;
     public LocationClient locationClient=null;
@@ -82,17 +93,22 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
         if(savedInstanceState == null){
             bkCommunityFragment = new BKCommunityFragment();
             mapFragment = new MapFragment();
+            newsFragment = new NewsFragment();
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.add(R.id.relative,bkCommunityFragment,"home");
             ft.add(R.id.relative,mapFragment,"map");
+            ft.add(R.id.relative,newsFragment,"news");
             ft.hide(mapFragment);
+            ft.hide(newsFragment);
             ft.show(bkCommunityFragment);
             ft.commit();
         }else{
             bkCommunityFragment = (BKCommunityFragment)getSupportFragmentManager().findFragmentByTag("home");
             mapFragment = (MapFragment)getSupportFragmentManager().findFragmentByTag("map");
+            newsFragment = (NewsFragment)getSupportFragmentManager().findFragmentByTag("news");
             getSupportFragmentManager().beginTransaction()
                     .hide(mapFragment)
+                    .hide(newsFragment)
                     .show(bkCommunityFragment).commit();
         }
         drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
@@ -116,6 +132,28 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
 
             }
         });
+        title_radio_group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, @IdRes int i) {
+                switch (i){
+                    case R.id.btn_radio_list:
+                        btn_radio_list.setBackgroundResource(R.drawable.radio_bg_leftwhite);
+                        btn_radio_list.setTextColor(getResources().getColor(R.color.color_red));
+                        btn_radio_map.setBackgroundResource(R.drawable.radio_bg_rightred);
+                        btn_radio_map.setTextColor(getResources().getColor(R.color.white));
+                        mapFragment.onRadioChecked(0);
+                        break;
+                    case R.id.btn_radio_map:
+                        btn_radio_map.setBackgroundResource(R.drawable.radio_bg_rightwhite);
+                        btn_radio_map.setTextColor(getResources().getColor(R.color.color_red));
+                        btn_radio_list.setBackgroundResource(R.drawable.radio_bg_leftred);
+                        btn_radio_list.setTextColor(getResources().getColor(R.color.white));
+                        mapFragment.onRadioChecked(1);
+                        break;
+                }
+            }
+        });
+
         //百度地图定位设置
         locationClient = new LocationClient(getApplicationContext());
         locationClient.registerLocationListener(locationListener);
@@ -133,7 +171,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
         return presenter;
     }
 
-    @OnClick({R.id.img_themeBack,R.id.img_right,R.id.menu_index,R.id.menu_map})
+    @OnClick({R.id.img_themeBack,R.id.img_right,R.id.menu_index,R.id.menu_map,R.id.menu_news})
     @Override
     public void onClick(View view) {
         drawerLayout.closeDrawers();
@@ -146,16 +184,30 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
                 break;
             case R.id.menu_index:
                 ft.hide(mapFragment);
+                ft.hide(newsFragment);
                 ft.show(bkCommunityFragment);
                 ft.commit();
                 title.setText(R.string.app_name);
+                title_radio_group.setVisibility(View.GONE);
                 break;
+            case R.id.item_project_more:
             case R.id.menu_map:
                 ft.hide(bkCommunityFragment);
+                ft.hide(newsFragment);
                 ft.show(mapFragment);
                 ft.commit();
                 mapFragment.loadDate();
                 title.setText(R.string.menu_map_text);
+                title_radio_group.setVisibility(View.VISIBLE);
+                break;
+            case R.id.item_news_more:
+            case R.id.menu_news:
+                ft.hide(bkCommunityFragment);
+                ft.hide(mapFragment);
+                ft.show(newsFragment);
+                ft.commit();
+                title.setText(R.string.menu_news_text);
+                title_radio_group.setVisibility(View.GONE);
                 break;
         }
     }

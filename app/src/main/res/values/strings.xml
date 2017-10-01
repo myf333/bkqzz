@@ -12,4 +12,12 @@
     <string name="nearby_most">里你最近</string>
     <string name="project_detail">查看详情</string>
     <string name="project_road">路线导航</string>
+    <string name="rent_box">我要租箱</string>
+    <string name="desc">简介</string>
+    <string name="project_pic">现场图片</string>
+    <string name="radio_list">列表</string>
+    <string name="radio_map">地图</string>
+    <string name="radio_bus">公交</string>
+    <string name="radio_car">驾车</string>
+    <string name="radio_walk">步行</string>
 </resources>

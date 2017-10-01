@@ -28,6 +28,7 @@ import com.myf.baokuqzz.adapter.MapPagerAdapter;
 import com.myf.baokuqzz.model.ProjectView;
 import com.myf.baokuqzz.model.ReturnRet;
 import com.myf.baokuqzz.presenter.MapPresenter;
+import com.myf.baokuqzz.widget.NoScrollViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +40,7 @@ import java.util.List;
 public class MapFragment extends BaseFragment<MapPresenter> implements SwipeRefreshLayout.OnRefreshListener{
     private View mapFragmentView;
     private LayoutInflater layoutInflater;
-    private ViewPager viewPager;
+    private NoScrollViewPager viewPager;
     private List<View> viewList = new ArrayList<>();
     private MapView mapView;
     private BaiduMap baiduMap;
@@ -47,7 +48,7 @@ public class MapFragment extends BaseFragment<MapPresenter> implements SwipeRefr
     private SwipeRefreshLayout swipe_refresh_map_list;
     private BDLocation location;
 
-    BitmapDescriptor bdCurrent = BitmapDescriptorFactory.fromResource(R.drawable.icon_maker1);
+    BitmapDescriptor bdCurrent = BitmapDescriptorFactory.fromResource(R.drawable.icon_location);
 
 
     @Override
@@ -94,6 +95,10 @@ public class MapFragment extends BaseFragment<MapPresenter> implements SwipeRefr
 
     }
 
+    public void onRadioChecked(int index){
+        viewPager.setCurrentItem(index);
+    }
+
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
@@ -126,7 +131,7 @@ public class MapFragment extends BaseFragment<MapPresenter> implements SwipeRefr
                 //要移动的点
                 .target(center)
                 //放大地图到20倍
-                .zoom(12.0f)
+                .zoom(14.0f)
                 .build();
         //定义MapStatusUpdate对象，以便描述地图状态将要发生的变化
         MapStatusUpdate mMapStatusUpdate = MapStatusUpdateFactory.newMapStatus(mMapStatus);

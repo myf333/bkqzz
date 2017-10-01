@@ -32,7 +32,7 @@ public abstract class BasePresenter<A,D> {
         unSubscribe();
     }
 
-    public <T> void addSubscription(Observable<T> observable, DisposableObserver<T> disposableObserver){
+    <T> void addSubscription(Observable<T> observable, DisposableObserver<T> disposableObserver){
         if(NetworkUtil.isNetworkConnected(BKApplication.getInstance())){
             observable.subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -47,7 +47,7 @@ public abstract class BasePresenter<A,D> {
         compositeSubscription.clear();
     }
 
-    public D getDao() {
+    D getDao() {
         return dao;
     }
 }
