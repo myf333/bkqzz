@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -14,6 +15,7 @@ import com.myf.baokuqzz.R;
 import com.myf.baokuqzz.activity.BaseActivity;
 import com.myf.baokuqzz.activity.NewsDetailActivity;
 import com.myf.baokuqzz.activity.ProjectActivity;
+import com.myf.baokuqzz.activity.RegisterLoginActivity;
 import com.myf.baokuqzz.model.NewsView;
 import com.myf.baokuqzz.model.ProjectView;
 
@@ -26,10 +28,12 @@ import java.util.List;
  */
 
 public class BKCommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private static final int TYPE_NEARBY=0;
-    private static final int TYPE_NEWS_TITLE=1;
-    private static final int TYPE_NEWS=2;
-    private static final int DEFAULT_ITEM_SIZE = 2;
+    private static final int TYPE_LOGIN = 0;
+    private static final int TYPE_HEADER = 1;
+    private static final int TYPE_NEARBY=2;
+    private static final int TYPE_NEWS_TITLE=3;
+    private static final int TYPE_NEWS=4;
+    private static final int DEFAULT_ITEM_SIZE = 3;
     private List<NewsView> newsViews = new ArrayList<>();
     private ProjectView projectView;
     private BaseActivity activity;
@@ -40,22 +44,49 @@ public class BKCommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public int getItemViewType(int position) {
-        if(position == 0){
-            return TYPE_NEARBY;
-        }
-        if(position == 1){
-            return TYPE_NEWS_TITLE;
-        }
-        if(position == 2){
+        if (BaseActivity.hasLogin()){
+            if(position == 0){
+                return TYPE_HEADER;
+            }
+            if(position == 1){
+                return TYPE_NEARBY;
+            }
+            if(position == 2){
+                return TYPE_NEWS_TITLE;
+            }
+            if(position == 3){
+                return TYPE_NEWS;
+            }
+            return TYPE_NEWS;
+
+        }else {
+            if(position == 0){
+                return TYPE_LOGIN;
+            }
+            if(position == 1){
+                return TYPE_NEARBY;
+            }
+            if(position == 2){
+                return TYPE_NEWS_TITLE;
+            }
+            if(position == 3){
+                return TYPE_NEWS;
+            }
             return TYPE_NEWS;
         }
-        return TYPE_NEWS;
+
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
         switch (viewType){
+            case TYPE_LOGIN:
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_login,parent,false);
+                return new LoginHolder(view);
+            case TYPE_HEADER:
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_header,parent,false);
+                return new HeaderHolder(view);
             case TYPE_NEARBY:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_nearby,parent,false);
                 return new NearbyHolder(view);
@@ -74,6 +105,8 @@ public class BKCommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         switch(getItemViewType(position)){
+            case TYPE_LOGIN:
+                break;
             case TYPE_NEARBY:
                 NearbyHolder nearbyHolder = (NearbyHolder)holder;
                 if(projectView!=null){
@@ -115,23 +148,23 @@ public class BKCommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
-    class NewsTitleHolder extends RecyclerView.ViewHolder{
+    private class NewsTitleHolder extends RecyclerView.ViewHolder{
         LinearLayout item_news_more;
-        public NewsTitleHolder(View itemView) {
+        NewsTitleHolder(View itemView) {
             super(itemView);
             item_news_more = itemView.findViewById(R.id.item_news_more);
             item_news_more.setOnClickListener(activity);
         }
     }
 
-    class NewsHolder extends RecyclerView.ViewHolder{
+    private class NewsHolder extends RecyclerView.ViewHolder{
         SimpleDraweeView item_news_pic;
         TextView txt_news_title;
         TextView txt_news_content;
         TextView txt_news_time;
         LinearLayout item_news;
         long id;
-        public NewsHolder(View itemView) {
+        NewsHolder(View itemView) {
             super(itemView);
             item_news_pic = itemView.findViewById(R.id.item_news_pic);
             txt_news_title = itemView.findViewById(R.id.txt_news_title);
@@ -149,14 +182,14 @@ public class BKCommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
-    class NearbyHolder extends RecyclerView.ViewHolder{
+    private class NearbyHolder extends RecyclerView.ViewHolder{
         LinearLayout item_project_more;
         RelativeLayout item_project_detail;
         TextView txt_project_name;
         TextView txt_project_distance;
         TextView txt_project_address;
         int id;
-        public NearbyHolder(View itemView) {
+        NearbyHolder(View itemView) {
             super(itemView);
             item_project_more = itemView.findViewById(R.id.item_project_more);
             item_project_detail = itemView.findViewById(R.id.item_project_detail);
@@ -171,6 +204,28 @@ public class BKCommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     activity.startActivity(intent);
                 }
             });
+        }
+    }
+
+    private class LoginHolder extends RecyclerView.ViewHolder{
+        Button btn_login;
+
+        LoginHolder(View itemView) {
+            super(itemView);
+            btn_login = itemView.findViewById(R.id.btn_login);
+            btn_login.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(activity, RegisterLoginActivity.class);
+                    activity.startActivity(intent);
+                }
+            });
+        }
+    }
+
+    private class HeaderHolder extends RecyclerView.ViewHolder{
+        public HeaderHolder(View itemView) {
+            super(itemView);
         }
     }
 

@@ -20,4 +20,13 @@
     <string name="radio_bus">公交</string>
     <string name="radio_car">驾车</string>
     <string name="radio_walk">步行</string>
+    <string name="not_login">尚未登录</string>
+    <string name="btn_login">立即登录</string>
+    <string name="btn_scan">扫一扫</string>
+    <string name="btn_qrCode">门禁二维码</string>
+    <string name="phone_code">+86</string>
+    <string name="phone_hint">请输入您的手机号</string>
+    <string name="agreement">我已阅读并同意《用户协议与隐私政策》</string>
+    <string name="btn_next">下一步</string>v
+    <string name="register_login">注册登录</string>
 </resources>
